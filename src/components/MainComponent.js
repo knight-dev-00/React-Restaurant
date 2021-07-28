@@ -1,6 +1,6 @@
 import { Navbar, NavbarBrand } from 'reactstrap';
 import Menu from './MenuComponent';
-import DishDetail from './DishDetail';
+import DishDetail from './DishDetailComponent';
 import React, { Component } from 'react';
 import { Dishes } from '../shared/dishes';
 
@@ -15,6 +15,7 @@ class Main extends Component {
 
   onDishSelect(dishId) {
     this.setState({ selectedDish: dishId});
+    console.log(this.state)
   }
 
   render() {
