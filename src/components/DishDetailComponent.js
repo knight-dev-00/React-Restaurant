@@ -1,10 +1,10 @@
 import React from 'react';
-import { Card, CardImg, CardImgOverlay, CardText, CardBody, CardTitle } from 'reactstrap';
+import { Card, CardImg, CardImgOverlay, CardText, CardBody, CardTitle, Breadcrumb, BreadcrumbItem } from 'reactstrap';
 import { Media } from 'reactstrap';
+import { Link } from 'react-router-dom';
 
-function RenderDish(dish) {
-  if (dish !=null) {
-    const comments = dish.comments.map((comment) => {
+function RenderDish(dish, dishComments) {
+    const comments = dishComments.map((comment) => {
       return(
         <Media body key={comment.id}>
           <p>{comment.comment}</p>
@@ -31,15 +31,18 @@ function RenderDish(dish) {
           </div>
         </div>
     )
-  } else {
-    <div></div>
-  }
 }
 
 function DishDetail(props) {
   return(
     <div className="container">
-      {RenderDish(props.dish)};
+      <div className="row">
+        <Breadcrumb>
+          <BreadcrumbItem><Link to="/menu">Menu</Link></BreadcrumbItem>
+          <BreadcrumbItem active>{props.dish.name}</BreadcrumbItem>
+        </Breadcrumb>
+      </div>
+      {RenderDish(props.dish, props.comments)};
     </div>
   )
 }
