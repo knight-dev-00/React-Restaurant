@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, CardImg, CardImgOverlay, CardText, CardBody, CardTitle } from 'reactstrap';
 import { Media } from 'reactstrap';
 
-function renderDish(dish) {
+function RenderDish(dish) {
   if (dish !=null) {
     const comments = dish.comments.map((comment) => {
       return(
@@ -39,7 +39,7 @@ function renderDish(dish) {
 function DishDetail(props) {
   return(
     <div className="container">
-      {renderDish(props.dish)};
+      {RenderDish(props.dish)};
     </div>
   )
 }
