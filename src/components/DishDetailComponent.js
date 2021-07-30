@@ -1,15 +1,14 @@
 import React from 'react';
 import { Card, CardImg, CardImgOverlay, CardText, CardBody, CardTitle, Breadcrumb, BreadcrumbItem } from 'reactstrap';
-import { Media } from 'reactstrap';
 import { Link } from 'react-router-dom';
 
 function RenderDish(dish, dishComments) {
     const comments = dishComments.map((comment) => {
       return(
-        <Media body key={comment.id}>
+        <li key={comment.id}>
           <p>{comment.comment}</p>
           <p>{comment.author + ' ' + new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit'}).format(new Date(Date.parse(comment.date)))}</p>
-        </Media>
+        </li>
       )
     });
     return(
@@ -25,9 +24,9 @@ function RenderDish(dish, dishComments) {
           </div>
           <div className="col-12 col-md-5 m-1">
             <h3>Comments</h3>
-            <Media>
+            <ul className="list-unstyled">
               {comments}
-            </Media>
+            </ul>
           </div>
         </div>
     )
