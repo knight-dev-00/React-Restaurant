@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Breadcrumb, BreadcrumbItem, Form, FormGroup, FormFeedback, Input, Col, Label } from 'reactstrap';
+import { Breadcrumb, BreadcrumbItem, Form, FormGroup, FormFeedback, Input, Col, Label, Button } from 'reactstrap';
 import { Link } from 'react-router-dom';
 
 class Contact extends Component {
@@ -190,7 +190,7 @@ class Contact extends Component {
               </FormGroup>
               <FormGroup row>
                 <Col md={{size:10, offset:2}}>
-                  <button type="submit" color="primary"> Send Feedback</button>
+                  <Button type="submit" color="primary">Send Feedback</Button>
                 </Col>
               </FormGroup>
             </Form>
