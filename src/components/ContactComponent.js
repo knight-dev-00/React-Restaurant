@@ -66,8 +66,8 @@ class Contact extends Component {
   }
 
   handleSubmit(event) {
-    console.log(this.state)
-    alert(this.state)
+    console.log(JSON.stringify(this.state))
+    alert(JSON.stringify(this.state))
     event.preventDefault();
   }
 
