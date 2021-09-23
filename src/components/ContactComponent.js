@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Breadcrumb, BreadcrumbItem, Input, Col, Label, Button, Row } from 'reactstrap';
+import { Breadcrumb, BreadcrumbItem, Col, Label, Button, Row } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { LocalForm, Control, Errors } from 'react-redux-form';
 
@@ -69,14 +69,14 @@ class Contact extends Component {
                       validators={{
                         required, minLength: minLength(2), maxLength: maxLength(15),
                       }}
-                        />
+                  />
                   <Errors className="text-danger" model=".firstname" show="touched"
                       messages={{
                         required: "Required",
                         maxLength: "Must be 15 characters or less",
                         minLength: "Must be more than 1 character"
                       }}
-                      />
+                  />
                 </Col>
               </Row>
               <Row className="form-group">
