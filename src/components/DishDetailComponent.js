@@ -20,11 +20,13 @@ class RenderDish extends Component {
     this.setState({
       isModalOpen: !this.state.isModalOpen
     })
+    console.log(this.props)
   }
 
-  handleSubmit() {
-    console.log("Rating: " + this.rating.value + " Name: " + this.name.value + " Comment: " + this.comment.value)
-    alert("Rating: " + this.rating.value + " Name: " + this.name.value + " Comment: " + this.comment.value)
+  handleSubmit(values) {
+    console.log(values)
+    this.props.addComment(this.props.dish.id, values.rating, values.name, values.comment)
+    console.log([this.props.dish.id, values.rating, values.name, values.comment])
     this.toggleModal();
   }
   comments = this.props.comments.map((comment) => {
@@ -61,8 +63,7 @@ class RenderDish extends Component {
                     <Label htmlFor="rating" md={2}>Rating</Label>
                     <Col md={10}>
                       <Control.select model=".rating" name="rating" id="rating"
-                          className="form-control"
-                          innerRef={(input) => this.rating = input}>
+                          className="form-control">
                           <option>5</option>
                           <option>4</option>
                           <option>3</option>
@@ -76,7 +77,6 @@ class RenderDish extends Component {
                     <Col md={10}>
                       <Control.text model=".name" name="name" id="name"
                           className="form-control"
-                          innerRef={(input) => this.name = input}
                           validators={{
                             required, maxLength: maxLength(20), minLength: minLength(2)
                           }}/>
@@ -93,8 +93,7 @@ class RenderDish extends Component {
                     <Label htmlFor="comment" md={2}>Comment</Label>
                     <Col md={10}>
                       <Control.textarea model=".comment" name="comment" rows="6"
-                          id="comment" className="form-control"
-                          inputRef={(input) => this.comment = input} />
+                          id="comment" className="form-control" />
                     </Col>
                   </Row>
                   <Row className="form-group">
@@ -121,6 +120,7 @@ function DishDetail (props) {
       <RenderDish
         dish={props.dish}
         comments={props.comments}
+        addComment={props.addComment}
       />;
     </div>
   )
