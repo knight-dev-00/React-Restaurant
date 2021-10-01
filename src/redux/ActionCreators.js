@@ -15,13 +15,25 @@ export const fetchDishes = () => (dispatch) => {
   dispatch(dishesLoading(true));
 
   return fetch('http://localhost:3001/' + 'dishes')
-    .then(response => response.json())
+    .then(response => {
+        if (response.ok) {
+          return response.json()
+        }
+        else {
+          var error = new Error("Error " + response.status + ": " + response.statusText)
+          error.response = response;
+          throw error;
+        }
+      },
+      error => {
+        var errmess = new Error(error.message);
+        throw errmess;
+      })
     .then(dishes => {
       dispatch(addDishes(dishes))
       console.log(dishes)
-    }
-    )
-
+    })
+    .catch(err => dispatch(dishesFailed(err.message)))
 }
 
 export const dishesLoading = () => ({
@@ -40,8 +52,22 @@ export const addDishes = (dishes) => ({
 
 export const fetchComments = () => (dispatch) => {
   return fetch('http://localhost:3001/' + 'dishes/' + 'comments')
-    .then(response => response.json())
+  .then(response => {
+      if (response.ok) {
+        return response.json()
+      }
+      else {
+        var error = new Error("Error " + response.status + ": " + response.statusText)
+        error.response = response;
+        throw error;
+      }
+    },
+    error => {
+      var errmess = new Error(error.message);
+      throw errmess
+    })
     .then(comments => dispatch(addComments(comments)))
+    .catch(err => dispatch(commentsFailed(err.message)))
 }
 
 export const commentsFailed = (errmess) => ({
@@ -58,8 +84,22 @@ export const fetchPromos = () => (dispatch) => {
   dispatch(dishesLoading(true));
 
   return fetch('http://localhost:3001/' + 'promos')
-    .then(response => response.json())
+  .then(response => {
+      if (response.ok) {
+        return response.json()
+      }
+      else {
+        var error = new Error("Error " + response.status + ": " + response.statusText)
+        error.response = response;
+        throw error;
+      }
+    },
+    error => {
+      var errmess = new Error(error.message);
+      throw errmess
+    })
     .then(promos => dispatch(addDishes(promos)))
+    .catch(err => dispatch(promosFailed(err.message)))
 }
 
 export const promosLoading = () => ({
