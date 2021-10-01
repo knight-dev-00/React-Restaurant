@@ -29,12 +29,15 @@ function Home(props) {
       <div className="row align-items-start">
         <div className="col-md m-1">
           <RenderCard item={props.dish}
-            isLoading={props.dishesLoading}
+            isLoading={props.dishLoading}
             errMess={props.dishesErrMess}
           />
         </div>
         <div className="col-md m-1">
-          <RenderCard item={props.promotion} />
+          <RenderCard item={props.promotion}
+            isLoading={props.promotionLoading}
+            errMess={props.promotionsErrMess}
+          />
         </div>
         <div className="col-md m-1">
           <RenderCard item={props.leader} />

@@ -12,13 +12,13 @@ export const Dishes = (state = {
       errMess: null,
       dishes: action.payload
       }
-    case ActionTypes.DISH_LOADING:
+    case ActionTypes.DISHES_LOADING:
       return {...state,
         isLoading: true,
         errMess: null,
         dishes: []
       }
-    case ActionTypes.DISH_FAILED:
+    case ActionTypes.DISHES_FAILED:
       return {...state,
         isLoading: false,
         errMess: action.payload,
