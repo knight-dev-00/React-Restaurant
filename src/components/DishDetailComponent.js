@@ -21,9 +21,10 @@ function RenderDish(props) {
           </Card>
         </div>
         <RenderComments
+          dish={props.dish}
           errMess={props.errMess}
           comments={props.comments}
-          addComment={props.addComment}
+          postComment={props.postComment}
         />
       </div>
   )
@@ -57,7 +58,10 @@ class RenderComments extends Component {
           <ul className="list-unstyled">
             {this.comments}
           </ul>
-          <CommentForm addComment={this.props.addComment} />
+          <CommentForm
+            postComment={this.props.postComment}
+            dish={this.props.dish}
+          />
         </div>
       )
     }
@@ -82,7 +86,7 @@ class CommentForm extends Component {
 
   handleSubmit(values) {
     console.log(values)
-    this.props.addComment(this.props.dish.id, values.rating, values.name, values.comment)
+    this.props.postComment(this.props.dish.id, values.rating, values.name, values.comment)
     console.log([this.props.dish.id, values.rating, values.name, values.comment])
     this.toggleModal();
   }
@@ -170,7 +174,7 @@ function DishDetail (props) {
         dish={props.dish}
         comments={props.comments}
         errMess={props.commentsErrMess}
-        addComment={props.addComment}
+        postComment={props.postComment}
       />;
     </div>
   )
