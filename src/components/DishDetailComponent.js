@@ -3,6 +3,7 @@ import { Card, CardImg, CardImgOverlay, CardText, CardBody, CardTitle, Breadcrum
 import { LocalForm, Control, Errors } from 'react-redux-form';
 import { Link } from 'react-router-dom';
 import { Loading } from './LoadingComponent';
+import { Fade, FadeTransform, Stagger } from 'react-animation-components';
 
 const required = val => val && val.length;
 const maxLength = len => val => !(val) || val.length <= len;
@@ -12,13 +13,18 @@ function RenderDish(props) {
   return(
       <div className="row">
         <div className="col-12 col-md-5 m-1">
-          <Card>
-            <CardImg top src={props.dish.image} alt={props.dish.name} />
-            <CardBody>
-              <CardTitle>{props.dish.name}</CardTitle>
-              <CardText>{props.dish.description}</CardText>
-            </CardBody>
-          </Card>
+          <FadeTransform in
+            transformProps={{
+              exitTransform: 'scale(.5) translateY(-50%)'
+            }}>
+            <Card>
+              <CardImg top src={props.dish.image} alt={props.dish.name} />
+              <CardBody>
+                <CardTitle>{props.dish.name}</CardTitle>
+                <CardText>{props.dish.description}</CardText>
+              </CardBody>
+            </Card>
+          </FadeTransform>
         </div>
         <RenderComments
           dish={props.dish}
@@ -37,10 +43,12 @@ class RenderComments extends Component {
 
   comments = this.props.comments.map((comment) => {
     return(
-      <li key={comment.id}>
-        <p>{comment.comment}</p>
-        <p>{comment.author + ' ' + new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit'}).format(new Date(Date.parse(comment.date)))}</p>
-      </li>
+      <Fade in>
+        <li key={comment.id}>
+          <p>{comment.comment}</p>
+          <p>{comment.author + ' ' + new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit'}).format(new Date(Date.parse(comment.date)))}</p>
+        </li>
+      </Fade>
     )
   });
 
@@ -56,7 +64,9 @@ class RenderComments extends Component {
         <div className="col-12 col-md-5 m-1">
           <h3>Comments</h3>
           <ul className="list-unstyled">
-            {this.comments}
+            <Stagger in>
+              {this.comments}
+            </Stagger>
           </ul>
           <CommentForm
             postComment={this.props.postComment}
