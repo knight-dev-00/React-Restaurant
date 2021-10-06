@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Breadcrumb, BreadcrumbItem, Col, Label, Button, Row } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import { Form, Control, Errors, actions } from 'react-redux-form';
+import { Form, Control, Errors, } from 'react-redux-form';
 
 const required = val => val && val.length;
 const maxLength = len => val => !(val) || val.length <= len;
@@ -10,13 +10,24 @@ const isNumber =  val => !isNaN(Number(val));
 const validEmail = (val) => /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(val);
 
 class Contact extends Component {
-  constructor(props) {
-    super(props);
-  }
 
   handleSubmit(values) {
     console.log(JSON.stringify(values))
-    alert(JSON.stringify(values))
+    var feedback = {
+      firstname: values.firstname,
+      lastname: values.lastname,
+      telnum: values.telnum,
+      email: values.email,
+      agree: values.agree,
+      contactType: values.contactType,
+      message: values.message,
+      date: new Date().toISOString(),
+    };
+    this.props.postFeedback(feedback)
+    console.log(this.props.feedback)
+    if (this.props.feedback.firstname !== '') {
+      alert(this.props.feedback)
+    }
     this.props.resetFeedbackForm();
   }
 

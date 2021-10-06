@@ -1,5 +1,4 @@
 import * as ActionTypes from './ActionTypes.js';
-import { DISHES } from '../shared/dishes';
 
 export const addComment = (comment) => ({
   type: ActionTypes.ADD_COMMENT,
@@ -14,7 +13,7 @@ export const postComment = (dishId, rating, author, comment) => (dispatch) => {
     comment: comment
   }
   newComment.date = new Date().toISOString();
-  return fetch('http://localhost:3001/' + 'dishes/' + 'comments', {
+  return fetch('http://localhost:3001/dishes/comments', {
     method: 'POST',
     credentials: 'same-origin',
     headers: {
@@ -49,7 +48,7 @@ export const postComment = (dishId, rating, author, comment) => (dispatch) => {
 export const fetchDishes = () => (dispatch) => {
   dispatch(dishesLoading(true));
 
-  return fetch('http://localhost:3001/' + 'dishes')
+  return fetch('http://localhost:3001/dishes')
     .then(response => {
         if (response.ok) {
           return response.json()
@@ -86,7 +85,7 @@ export const addDishes = (dishes) => ({
 })
 
 export const fetchComments = () => (dispatch) => {
-  return fetch('http://localhost:3001/' + 'dishes/' + 'comments')
+  return fetch('http://localhost:3001/dishes/comments')
   .then(response => {
       if (response.ok) {
         return response.json()
@@ -116,14 +115,13 @@ export const addComments = (comments) => ({
 })
 
 export const fetchPromos = () => (dispatch) => {
-  dispatch(dishesLoading(true));
+  dispatch(promosLoading(true));
 
-  return fetch('http://localhost:3001/' + 'promos')
+  return fetch('http://localhost:3001/promos')
   .then(response => {
       if (response.ok) {
         return response.json()
-      }
-      else {
+      } else {
         var error = new Error("Error " + response.status + ": " + response.statusText)
         error.response = response;
         throw error;
@@ -133,7 +131,7 @@ export const fetchPromos = () => (dispatch) => {
       var errmess = new Error(error.message);
       throw errmess
     })
-    .then(promos => dispatch(addDishes(promos)))
+    .then(promos => dispatch(addPromos(promos)))
     .catch(err => dispatch(promosFailed(err.message)))
 }
 
@@ -150,3 +148,76 @@ export const addPromos = (promos) => ({
   type: ActionTypes.ADD_PROMOS,
   payload: promos
 })
+
+export const fetchLeaders = () => (dispatch) => {
+   dispatch(leadersLoading(true));
+
+   return fetch('http://localhost:3001/leaders')
+   .then(response => {
+       if (response.ok) {
+         return response.json()
+       } else {
+         var error = new Error("Error " + response.status + ": " + response.statusText)
+         error.response = response;
+         throw error;
+       }
+     },
+     error => {
+       var errmess = new Error(error.message);
+       throw errmess
+     })
+     .then(leaders => dispatch(addLeaders(leaders)))
+     .catch(err => dispatch(leadersFailed(err.message)))
+}
+
+export const leadersLoading = () => ({
+  type: ActionTypes.LEADERS_LOADING,
+})
+
+export const leadersFailed = (errmess) => ({
+  type: ActionTypes.LEADERS_FAILED,
+  payload: errmess
+})
+
+export const addLeaders = (leaders) => ({
+  type: ActionTypes.ADD_LEADERS,
+  payload: leaders
+})
+
+export const postFeedback = (info) => (dispatch) => {
+  return fetch('http://localhost:3001/feedback', {
+    method: 'POST',
+    credentials: 'same-origin',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(info)
+  })
+  .then(response => {
+      if (response.ok) {
+        return response.json()
+      }
+      else {
+        var error = new Error("Error " + response.status + ": " + response.statusText)
+        error.response = response;
+        throw error;
+      }
+    },
+    error => {
+      var errmess = new Error(error.message);
+      throw errmess;
+    })
+  .then(feedback => {
+    dispatch(addFeedback(feedback))
+    console.log(feedback)
+  })
+  .catch(err => {
+    console.log(err.message);
+    alert("The fedback could not get posted!\nError: " + err.message)
+  })
+};
+
+export const addFeedback = (feedback) => ({
+  type: ActionTypes.ADD_FEEDBACK,
+  payload: feedback
+});

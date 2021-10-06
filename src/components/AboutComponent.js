@@ -1,28 +1,40 @@
 import React from 'react';
 import { Breadcrumb, BreadcrumbItem, Card, CardBody, CardHeader, Media } from 'reactstrap';
 import { Link } from 'react-router-dom';
+import { Loading } from './LoadingComponent';
+import { Stagger, Fade } from 'react-animation-components';
 
 function About(props) {
 
     const RenderLeader = (leaders) => {
-      return(
-        leaders.map((leader) => {
+      if (leaders.isLoading) {
+        return(
+          <Loading />
+        )
+      } else if (leaders.errMess) {
+        return(
+          <h4>{leaders.errMess}</h4>
+        )
+      } else {
+        leaders.leaders.map((leader) => {
           return(
             <div key={leader.id} className="row">
-              <Media tag="li">
-                <Media left middle>
-                  <Media object src={leader.image} alt={leader.name} />
+              <Fade in>
+                <Media tag="li">
+                  <Media left middle>
+                    <Media object src={leader.image} alt={leader.name} />
+                  </Media>
+                  <Media body className="ml-1">
+                    <Media heading>{leader.name}</Media>
+                    <p>{leader.designation}</p>
+                    <p>{leader.description}</p>
+                  </Media>
                 </Media>
-                <Media body className="ml-1">
-                  <Media heading>{leader.name}</Media>
-                  <p>{leader.designation}</p>
-                  <p>{leader.description}</p>
-                </Media>
-              </Media>
+              </Fade>
             </div>
           )
-        },)
-      );
+        })
+      };
     }
 
     return(
@@ -81,9 +93,11 @@ function About(props) {
                 </div>
             </div>
             <div className="container">
+              <Stagger in>
                 <Media list className="list-unstyled">
                     {RenderLeader(props.leaders)}
                 </Media>
+              </Stagger>
             </div>
         </div>
     );

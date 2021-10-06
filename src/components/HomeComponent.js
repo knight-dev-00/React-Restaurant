@@ -9,7 +9,9 @@ function RenderCard({item, isLoading, errMess}) {
       <Loading />
     )
   } else if (errMess) {
-    <h4>{errMess}</h4>
+    return(
+      <h4>{errMess}</h4>
+    )
   } else {
     return(
       <FadeTransform in
@@ -30,6 +32,7 @@ function RenderCard({item, isLoading, errMess}) {
 }
 
 function Home(props) {
+  console.log(props)
   return(
     <div className="container">
       <div className="row align-items-start">
@@ -46,7 +49,10 @@ function Home(props) {
           />
         </div>
         <div className="col-md m-1">
-          <RenderCard item={props.leader} />
+          <RenderCard item={props.leader}
+            isLoading={props.leaderLoading}
+            errMess={props.leadersErrMess}
+          />
         </div>
       </div>
     </div>
