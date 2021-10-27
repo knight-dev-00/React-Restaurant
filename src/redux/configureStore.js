@@ -4,6 +4,8 @@ import { Dishes } from './dishes';
 import { Comments } from './comments';
 import { Promotions } from './promotions';
 import { Leaders } from './leaders';
+import { Favourites } from './favourites';
+import { User } from './User';
 import thunk from "redux-thunk";
 import logger from "redux-logger";
 import { InitialFeedback } from './forms';
@@ -16,6 +18,8 @@ export const ConfigureStore = () => {
       comments: Comments,
       promotions: Promotions,
       leaders: Leaders,
+      favourites: Favourites,
+      user: User,
       ...createForms({
         feedback: InitialFeedback
       })

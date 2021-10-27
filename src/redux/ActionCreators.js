@@ -1,23 +1,23 @@
 import * as ActionTypes from './ActionTypes.js';
+var token = sessionStorage["token"];
 
 export const addComment = (comment) => ({
   type: ActionTypes.ADD_COMMENT,
   payload: comment
 });
 
-export const postComment = (dishId, rating, author, comment) => (dispatch) => {
+export const postComment = (dishId, rating, comment) => (dispatch) => {
   var newComment = {
-    dishId: dishId,
+    dish: dishId,
     rating: rating,
-    author: author,
     comment: comment
   }
-  newComment.date = new Date().toISOString();
-  return fetch('http://localhost:3001/dishes/comments', {
+  return fetch('https://localhost:3443/comments', {
     method: 'POST',
     credentials: 'same-origin',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + sessionStorage['token']
     },
     body: JSON.stringify(newComment)
   })
@@ -48,7 +48,7 @@ export const postComment = (dishId, rating, author, comment) => (dispatch) => {
 export const fetchDishes = () => (dispatch) => {
   dispatch(dishesLoading(true));
 
-  return fetch('http://localhost:3001/dishes')
+  return fetch('https://localhost:3443/dishes')
     .then(response => {
         if (response.ok) {
           return response.json()
@@ -65,7 +65,6 @@ export const fetchDishes = () => (dispatch) => {
       })
     .then(dishes => {
       dispatch(addDishes(dishes))
-      console.log(dishes)
     })
     .catch(err => dispatch(dishesFailed(err.message)))
 }
@@ -85,7 +84,7 @@ export const addDishes = (dishes) => ({
 })
 
 export const fetchComments = () => (dispatch) => {
-  return fetch('http://localhost:3001/dishes/comments')
+  return fetch('https://localhost:3443/comments')
   .then(response => {
       if (response.ok) {
         return response.json()
@@ -117,7 +116,7 @@ export const addComments = (comments) => ({
 export const fetchPromos = () => (dispatch) => {
   dispatch(promosLoading(true));
 
-  return fetch('http://localhost:3001/promos')
+  return fetch('https://localhost:3443/promotions')
   .then(response => {
       if (response.ok) {
         return response.json()
@@ -150,9 +149,9 @@ export const addPromos = (promos) => ({
 })
 
 export const fetchLeaders = () => (dispatch) => {
-   dispatch(leadersLoading(true));
+   dispatch(leadersLoading());
 
-   return fetch('http://localhost:3001/leaders')
+   return fetch('https://localhost:3443/leaders')
    .then(response => {
        if (response.ok) {
          return response.json()
@@ -185,7 +184,7 @@ export const addLeaders = (leaders) => ({
 })
 
 export const postFeedback = (info) => (dispatch) => {
-  return fetch('http://localhost:3001/feedback', {
+  return fetch('https://localhost:3443/feedback', {
     method: 'POST',
     credentials: 'same-origin',
     headers: {
@@ -213,7 +212,7 @@ export const postFeedback = (info) => (dispatch) => {
   })
   .catch(err => {
     console.log(err.message);
-    alert("The fedback could not get posted!\nError: " + err.message)
+    alert("The feedback could not get posted!\nError: " + err.message)
   })
 };
 
@@ -221,3 +220,244 @@ export const addFeedback = (feedback) => ({
   type: ActionTypes.ADD_FEEDBACK,
   payload: feedback
 });
+
+export const fetchFavourites = () => (dispatch) => {
+  dispatch(favouritesLoading(true));
+
+  return fetch('https://localhost:3443/favourites', {
+    method: 'GET',
+    credentials: 'same-origin',
+    headers: {
+      'Authorization': 'Bearer ' + sessionStorage['token']
+    }
+  })
+  .then(response => {
+      if (response.ok) {
+        return response.json()
+      } else {
+        var error = new Error("Error " + response.status + ": " + response.statusText)
+        error.response = response;
+        throw error;
+      }
+    },
+    error => {
+      var errmess = new Error(error.message);
+      throw errmess
+    })
+    .then(favourites => dispatch(addFavourites(favourites)))
+    .catch(err => dispatch(favouritesFailed(err.message)))
+}
+
+export const favouritesLoading = () => ({
+  type: ActionTypes.FAVOURITES_LOADING,
+})
+
+export const favouritesFailed = (errmess) => ({
+  type: ActionTypes.FAVOURITES_FAILED,
+  payload: errmess
+})
+
+export const addFavourites = (favourites) => ({
+  type: ActionTypes.ADD_FAVOURITES,
+  payload: favourites
+})
+
+export const postFavourite = (dishId) => (dispatch) => {
+  const token = 'Bearer ' + sessionStorage['token'];
+  return fetch('https://localhost:3443/favourites/' + dishId, {
+    method: 'POST',
+    credentials: 'same-origin',
+    headers: {
+      'Authorization': token
+    },
+  })
+  .then(response => {
+      if (response.ok) {
+        return response.json()
+      }
+      else {
+        var error = new Error("Error " + response.status + ": " + response.statusText)
+        error.response = response;
+        throw error;
+      }
+    },
+    error => {
+      var errmess = new Error(error.message);
+      throw errmess;
+    })
+  .then(favourites => {
+    console.log(favourites)
+    dispatch(addFavourites(favourites))
+  })
+  .catch(err => {
+    console.log(err.message);
+    alert("The dish cannot be added to favourites!\nError: " + err.message)
+  })
+};
+
+export const deleteFavourite = (dishId) => (dispatch) => {
+  const token = 'Bearer ' + sessionStorage['token'];
+  return fetch('https://localhost:3443/favourites/' + dishId, {
+    method: 'DELETE',
+    credentials: 'same-origin',
+    headers: {
+      'Authorization': token
+    },
+  })
+  .then(response => {
+      if (response.ok) {
+        return response.json()
+      }
+      else {
+        var error = new Error("Error " + response.status + ": " + response.statusText)
+        error.response = response;
+        throw error;
+      }
+    },
+    error => {
+      var errmess = new Error(error.message);
+      throw errmess;
+    })
+  .then(favourites => {
+    dispatch(addFavourites(favourites))
+  })
+  .catch(err => {
+    console.log(err.message);
+    alert("The dish cannot be removed!\nError: " + err.message)
+  })
+};
+
+export const loginReq = (cred) => (dispatch) => {
+  dispatch(loginRequest());
+  return fetch('https://localhost:3443/users/login', {
+    method: 'POST',
+    credentials: 'same-origin',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(cred)
+  })
+  .then((resp) => {
+    console.log(resp)
+    if (!resp.ok) {
+      var error = new Error("Error " + resp.statusCode + ": " + resp.status + '\n' + resp.err)
+      error.response = resp;
+      throw error;
+    } else {
+      return resp.json();
+    }
+  },
+  error => {
+    var errmess = new Error(error.message);
+    throw errmess
+  })
+  .then((response) => {
+    dispatch(loginSuccess());
+    sessionStorage["token"] = response.token;
+    sessionStorage["firstname"] = response.user.firstname;
+    sessionStorage["lastname"] = response.user.lastname;
+  })
+  .catch(err => dispatch(loginFailed(err.message)))
+}
+
+export const loginRequest = () => ({
+  type: ActionTypes.LOGIN_REQUEST,
+})
+
+export const loginFailed = (errmess) => ({
+  type: ActionTypes.LOGIN_FAILED,
+  payload: errmess
+})
+
+export const loginSuccess = () => ({
+  type: ActionTypes.LOGIN_SUCCESS,
+})
+
+export const signupReq = (cred) => (dispatch) => {
+  dispatch(signupRequest());
+  return fetch('https://localhost:3443/users/signup', {
+    method: 'POST',
+    credentials: 'same-origin',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(cred)
+  })
+  .then((resp) => {
+    if (!resp.ok) {
+      var error = new Error("Error " + resp.statusCode + ": " + resp.status + '\n' + resp.err)
+      error.response = resp;
+      throw error;
+    } else {
+      return resp.json();
+    }
+  },
+  error => {
+    var errmess = new Error(error.message);
+    throw errmess
+  })
+  .then((response) => {
+    dispatch(signupSuccess());
+    sessionStorage["token"] = response.token;
+    sessionStorage["user"] = response.user;
+  })
+  .catch(err => dispatch(signupFailed(err.message)))
+}
+
+export const signupRequest = () => ({
+  type: ActionTypes.SIGNUP_REQUEST,
+})
+
+export const signupFailed = (errmess) => ({
+  type: ActionTypes.SIGNUP_FAILED,
+  payload: errmess
+})
+
+export const signupSuccess = () => ({
+  type: ActionTypes.SIGNUP_SUCCESS,
+})
+
+/*export const fetchUser = () => {
+  return fetch('https://localhost:3443/users/user', {
+    method: 'GET',
+    credentials: 'same-origin',
+    headers: {
+      Authorization: 'Bearer ' + sessionStorage['token']
+    }
+  })
+  .then(resp => {
+    if (!resp.ok) {
+      var error = new Error("Error " + resp.statusCode + ": " + resp.status + '\n' + resp.err)
+      error.response = resp;
+      throw error;
+    } else {
+      return resp.json();
+    }
+  },
+  error => {
+    var errmess = new Error(error.message);
+    throw errmess
+  })
+}*/
+
+export const logoutReq = () => (dispatch) => {
+  dispatch(logoutRequest())
+  sessionStorage["token"] = '';
+  sessionStorage["firstname"] = '';
+  sessionStorage["lastname"] = '';
+  dispatch(logoutSuccess())
+}
+
+export const logoutRequest = () => ({
+  type: ActionTypes.LOGOUT_REQUEST,
+})
+
+export const logoutFailed = (errmess) => ({
+  type: ActionTypes.LOGOUT_FAILED,
+  payload: errmess
+})
+
+export const logoutSuccess = () => ({
+  type: ActionTypes.LOGOUT_SUCCESS,
+})
+console.log(sessionStorage["token"])

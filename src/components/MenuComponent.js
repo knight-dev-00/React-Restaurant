@@ -6,8 +6,8 @@ import { Loading } from './LoadingComponent';
 function RenderMenuItem({dish, onClick}) {
   return(
     <Card>
-      <Link to={`/menu/${dish.id}`}>
-        <CardImg src={dish.image} alt={dish.name} />
+      <Link to={`/menu/${dish._id}`}>
+        <CardImg src={'https://localhost:3443/' + dish.image} alt={dish.name} />
         <CardImgOverlay body className="ml-5">
           <CardTitle heading>{dish.name}</CardTitle>
         </CardImgOverlay>
@@ -19,7 +19,7 @@ function RenderMenuItem({dish, onClick}) {
 function Menu(props) {
   const menu = props.dishes.dishes.map((dish) => {
     return(
-      <div key={dish.id} className="col-12 col-md-5 m-1">
+      <div key={dish._id} className="col-12 col-md-5 m-1">
         <RenderMenuItem dish={dish} />
       </div>
     )
@@ -44,7 +44,7 @@ function Menu(props) {
   return(
     <div className="container">
       <div className="row">
-        <Breadcrumb>
+        <Breadcrumb className="col-2">
           <BreadcrumbItem><Link to="/home">Home</Link></BreadcrumbItem>
           <BreadcrumbItem active>Menu</BreadcrumbItem>
         </Breadcrumb>

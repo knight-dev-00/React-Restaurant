@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Card, CardImg, CardText, CardBody, CardTitle, Breadcrumb, BreadcrumbItem, Modal, ModalHeader, ModalBody, Row, Col, Label, Button } from 'reactstrap';
+import { Card, CardImg, CardImgOverlay, CardText, CardBody, CardTitle, Breadcrumb, BreadcrumbItem, Modal, ModalHeader, ModalBody, Row, Col, Label, Button } from 'reactstrap';
 import { LocalForm, Control, Errors } from 'react-redux-form';
 import { Link } from 'react-router-dom';
 import { Loading } from './LoadingComponent';
@@ -18,7 +18,16 @@ function RenderDish(props) {
               exitTransform: 'scale(.5) translateY(-50%)'
             }}>
             <Card>
-              <CardImg top src={props.dish.image} alt={props.dish.name} />
+              <CardImg top src={'https://localhost:3443/' + props.dish.image} alt={props.dish.name} />
+              <CardImgOverlay>
+                  <Button outline color="primary" onClick={() => props.favourite ? console.log('Already favourite') : props.postFavourite(props.dish._id)}>
+                      {props.favourite ?
+                          <span className="fa fa-heart"></span>
+                          :
+                          <span className="fa fa-heart-o"></span>
+                      }
+                  </Button>
+              </CardImgOverlay>
               <CardBody>
                 <CardTitle>{props.dish.name}</CardTitle>
                 <CardText>{props.dish.description}</CardText>
@@ -37,19 +46,20 @@ function RenderDish(props) {
 }
 
 class RenderComments extends Component {
-
   comments = this.props.comments.map((comment) => {
+    console.log(comment)
     return(
       <Fade in>
         <li key={comment.id}>
           <p>{comment.comment}</p>
-          <p>{comment.author + ' ' + new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit'}).format(new Date(Date.parse(comment.date)))}</p>
+          <p>{comment.author.firstname + ' ' + comment.createdAt}</p>
         </li>
       </Fade>
     )
   });
-
   render() {
+    console.log(this.props)
+    console.log(this.comments);
     if (this.props.errMess) {
       return(
         <div className="col-12 col-md-5 m-1">
@@ -88,13 +98,11 @@ class CommentForm extends Component {
     this.setState({
       isModalOpen: !this.state.isModalOpen
     })
-    console.log(this.props)
   }
 
   handleSubmit(values) {
     console.log(values)
-    this.props.postComment(this.props.dish.id, values.rating, values.name, values.comment)
-    console.log([this.props.dish.id, values.rating, values.name, values.comment])
+    this.props.postComment(this.props.dish._id, Number(values.rating), values.comment)
     this.toggleModal();
   }
   render() {
@@ -119,23 +127,6 @@ class CommentForm extends Component {
                 </Col>
               </Row>
               <Row className="form-group">
-                <Label htmlFor="name" md={2}>Name</Label>
-                <Col md={10}>
-                  <Control.text model=".name" name="name" id="name"
-                      className="form-control"
-                      validators={{
-                        required, maxLength: maxLength(20), minLength: minLength(2)
-                      }}/>
-                  <Errors className="text-danger" model=".name" show="touched"
-                      messages={{
-                        required: "Required",
-                        maxLength: "Must be 15 characters or less",
-                        minLength: "Must be more than 1 character"
-                      }}
-                  />
-                </Col>
-              </Row>
-              <Row className="form-group">
                 <Label htmlFor="comment" md={2}>Comment</Label>
                 <Col md={10}>
                   <Control.textarea model=".comment" name="comment" rows="6"
@@ -153,7 +144,7 @@ class CommentForm extends Component {
   }
 }
 
-function DishDetail (props) {
+function DishDetail(props) {
   if (props.isLoading) {
     return(
       <div className="container">
@@ -172,7 +163,7 @@ function DishDetail (props) {
   return(
     <div className="container">
       <div className="row">
-        <Breadcrumb>
+        <Breadcrumb className="col-2">
           <BreadcrumbItem><Link to="/menu">Menu</Link></BreadcrumbItem>
           <BreadcrumbItem active>{props.dish.name}</BreadcrumbItem>
         </Breadcrumb>
@@ -182,6 +173,8 @@ function DishDetail (props) {
         comments={props.comments}
         errMess={props.commentsErrMess}
         postComment={props.postComment}
+        favourite={props.favourite}
+        postFavourite={props.postFavourite}
       />;
     </div>
   )

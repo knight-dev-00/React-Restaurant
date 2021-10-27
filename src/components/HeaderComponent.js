@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Navbar, NavbarBrand, Nav, NavbarToggler, Collapse, NavItem, Jumbotron,
-    Modal, ModalHeader, ModalBody, Label, Input, Form, FormGroup, Button } from 'reactstrap';
+    Modal, ModalHeader, ModalBody, Label, Input, Form, FormGroup, Button, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { NavLink } from 'react-router-dom';
 
 class Header extends Component {
@@ -8,11 +8,15 @@ class Header extends Component {
     super(props);
     this.state = {
       isNavOpen: false,
-      isModalOpen: false
+      isModalOpen: false,
+      isMenuOpen: false
     }
     this.toggleNav = this.toggleNav.bind(this);
     this.toggleModal = this.toggleModal.bind(this);
+    this.toggleMenu = this.toggleMenu.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.onMouseEnter = this.onMouseEnter.bind(this);
+    this.onMouseLeave = this.onMouseLeave.bind(this);
   }
 
   toggleModal() {
@@ -21,8 +25,26 @@ class Header extends Component {
     })
   }
 
+  toggleMenu() {
+    this.setState({
+      isMenuOpen: !this.state.isMenuOpen
+    })
+  }
+
+  onMouseEnter() {
+    this.setState({
+      isMenuOpen: true
+    });
+  }
+
+  onMouseLeave() {
+    this.setState({
+      isMenuOpen: false
+    });
+  }
+
   handleSubmit(event) {
-    console.log("Username: " + this.username.value + " Password: " + this.password.value)
+    this.props.loginReq({username: this.username.value, password: this.password.value})
     this.toggleModal();
     event.preventDefault()
   }
@@ -40,7 +62,7 @@ class Header extends Component {
           <div className="container">
             <NavbarToggler onClick={this.toggleNav} />
             <NavbarBrand className="mr-auto" href="/">
-              <img src="assets/images/logo.png" height="30" weight="41" alt="Ristorante con fusion" />
+              <img src="https://localhost:3443/images/logo.jpg" height="30" weight="41" alt="La Ratatouille" />
             </NavbarBrand>
             <Collapse isOpen={this.state.isNavOpen} navbar>
               <Nav navbar>
@@ -67,7 +89,42 @@ class Header extends Component {
               </Nav>
               <Nav className="ml-auto" navbar>
                 <NavItem>
-                  <Button outline onClick={this.toggleModal}><span className="fa fa-sign-in fa-lg"></span> Login</Button>
+                  { !sessionStorage['firstname'] ?
+                    <Dropdown onMouseOver={this.onMouseEnter} onMouseLeave={this.onMouseLeave} isOpen={this.state.isMenuOpen} toggle={this.toggleMenu}>
+                      <DropdownToggle outline onClick={this.toggleModal}>
+                        <span className="fa fa-sign-in fa-lg"></span> Login
+                        { this.props.user.logging ?
+                          <span className="fa fa-spinner fa-pulse fa-fw"></span>
+                          : null
+                        }
+                      </DropdownToggle>
+                      <DropdownMenu>
+                        <DropdownItem>
+                          <span className="fa fa-sign-up fa-lg"></span> Signup
+                          { this.props.user.signing ?
+                            <span className="fa fa-spinner fa-pulse fa-fw"></span>
+                            : null
+                          }
+                        </DropdownItem>
+                      </DropdownMenu>
+                    </Dropdown>
+                    :
+                    <Dropdown onMouseOver={this.onMouseEnter} onMouseLeave={this.onMouseLeave} isOpen={this.state.isMenuOpen} toggle={this.toggleMenu}>
+                      <DropdownToggle outline to="/profile">
+                        <span className="fa fa-address-book"></span> {sessionStorage['firstname']}
+                      </DropdownToggle>
+                      <DropdownMenu>
+                        <NavLink to={`/profile/favourites`}>
+                          <DropdownItem>
+                            <span className="fa fa-heart fa-lg"></span> Favourites
+                          </DropdownItem>
+                        </NavLink>
+                        <DropdownItem onClick={this.props.logoutReq}>
+                          <span className="fa fa-sign-out fa-lg"></span> Logout
+                        </DropdownItem>
+                      </DropdownMenu>
+                    </Dropdown>
+                  }
                 </NavItem>
               </Nav>
             </Collapse>
@@ -77,8 +134,8 @@ class Header extends Component {
           <div className="container">
             <div className="row row-header">
               <div className="col-12 col-sm-6">
-                <h1>Ristorante con Fusion</h1>
-                <p>We take inspiration from the World's best cuisines, and create a unique fusion experience. Our lipsmacking creations will tickle your culinary senses!</p>
+                <h1>La Ratatouille</h1>
+                <p>Anyone can cook, but only the fearless can be great!</p>
               </div>
             </div>
           </div>

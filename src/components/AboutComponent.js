@@ -4,43 +4,44 @@ import { Link } from 'react-router-dom';
 import { Loading } from './LoadingComponent';
 import { Stagger, Fade } from 'react-animation-components';
 
-function About(props) {
+const RenderLeader = (props) => {
+  if (props.leaders.isLoading) {
+    return(
+      <Loading />
+    )
+  } else if (props.leaders.errMess) {
+    return(
+      <h4>{props.leaders.errMess}</h4>
+    )
+  } else {
+    const leaders = props.leaders.leaders.map((leader) => {
+      return(
+        <div key={leader.id} className="row">
+          <Fade in>
+            <Media tag="li">
+              <Media left middle>
+                <Media object src={'https://localhost:3443/' + leader.image} alt={leader.name} />
+              </Media>
+              <Media body className="ml-1">
+                <Media heading>{leader.name}</Media>
+                <p>{leader.designation}</p>
+                <p>{leader.description}</p>
+              </Media>
+            </Media>
+          </Fade>
+        </div>
+      )
+    })
+    return leaders
+  };
+}
 
-    const RenderLeader = (leaders) => {
-      if (leaders.isLoading) {
-        return(
-          <Loading />
-        )
-      } else if (leaders.errMess) {
-        return(
-          <h4>{leaders.errMess}</h4>
-        )
-      } else {
-        leaders.leaders.map((leader) => {
-          return(
-            <div key={leader.id} className="row">
-              <Fade in>
-                <Media tag="li">
-                  <Media left middle>
-                    <Media object src={leader.image} alt={leader.name} />
-                  </Media>
-                  <Media body className="ml-1">
-                    <Media heading>{leader.name}</Media>
-                    <p>{leader.designation}</p>
-                    <p>{leader.description}</p>
-                  </Media>
-                </Media>
-              </Fade>
-            </div>
-          )
-        })
-      };
-    }
+function About(props) {
 
     return(
         <div className="container">
             <div className="row">
-                <Breadcrumb>
+                <Breadcrumb className="col-2">
                     <BreadcrumbItem><Link to="/home">Home</Link></BreadcrumbItem>
                     <BreadcrumbItem active>About Us</BreadcrumbItem>
                 </Breadcrumb>
@@ -76,7 +77,7 @@ function About(props) {
                     <Card>
                         <CardBody className="bg-faded">
                             <blockquote className="blockquote">
-                                <p className="mb-0">You better cut the pizza in four pieces because
+                                <p className="mb-3">You better cut the pizza in four pieces because
                                     I'm not hungry enough to eat six.</p>
                                 <footer className="blockquote-footer">Yogi Berra,
                                 <cite title="Source Title">The Wit and Wisdom of Yogi Berra,
@@ -95,7 +96,7 @@ function About(props) {
             <div className="container">
               <Stagger in>
                 <Media list className="list-unstyled">
-                    {RenderLeader(props.leaders)}
+                    <RenderLeader leaders={props.leaders} />
                 </Media>
               </Stagger>
             </div>

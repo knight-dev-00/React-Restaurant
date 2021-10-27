@@ -1,28 +1,28 @@
 import * as ActionTypes from './ActionTypes.js';
 
-export const Dishes = (state = {
+export const Favourites = (state = {
     isLoading: true,
     errMess: null,
-    dishes: []
+    favourites: []
   }, action) => {
   switch(action.type) {
-    case ActionTypes.ADD_DISHES:
+    case ActionTypes.ADD_FAVOURITES:
       return {...state,
         isLoading: false,
         errMess: null,
-        dishes: action.payload
+        favourites: action.payload
       }
-    case ActionTypes.DISHES_LOADING:
-      return {...state,
-        isLoading: true,
-        errMess: null,
-        dishes: []
-      }
-    case ActionTypes.DISHES_FAILED:
+    case ActionTypes.FAVOURITES_FAILED:
       return {...state,
         isLoading: false,
         errMess: action.payload,
-        dishes: []
+        favourites: []
+      }
+    case ActionTypes.FAVOURITES_LOADING:
+      return {...state,
+        isLoading: true,
+        errMess: null,
+        favourites: []
       }
     default:
         return state;
