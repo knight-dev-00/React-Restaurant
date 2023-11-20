@@ -20,7 +20,7 @@ function RenderCard({item, isLoading, errMess}) {
         }}>
         <Card>
           <CardBody>
-            <CardImg src={'https://localhost:3443/' + item.image} alt={item.name} />
+            <CardImg src={item.image} alt={item.name} />
             <CardTitle>{item.name}</CardTitle>
             {item.designation ? <CardSubtitle>{item.designation}</CardSubtitle> : null}
             <CardText>{item.description}</CardText>

@@ -7,7 +7,7 @@ function RenderMenuItem({dish, onClick}) {
   return(
     <Card>
       <Link to={`/menu/${dish._id}`}>
-        <CardImg src={'https://localhost:3443/' + dish.image} alt={dish.name} />
+        <CardImg src={dish.image} alt={dish.name} />
         <CardImgOverlay body className="ml-5">
           <CardTitle heading>{dish.name}</CardTitle>
         </CardImgOverlay>

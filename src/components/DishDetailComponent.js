@@ -18,7 +18,7 @@ function RenderDish(props) {
               exitTransform: 'scale(.5) translateY(-50%)'
             }}>
             <Card>
-              <CardImg top src={'https://localhost:3443/' + props.dish.image} alt={props.dish.name} />
+              <CardImg top src={'https://' + window.location.hostname + '/' + props.dish.image} alt={props.dish.name} />
               <CardImgOverlay>
                   <Button outline color="primary" onClick={() => props.favourite ? console.log('Already favourite') : props.postFavourite(props.dish._id)}>
                       {props.favourite ?

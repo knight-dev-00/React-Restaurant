@@ -12,7 +12,7 @@ export const postComment = (dishId, rating, comment) => (dispatch) => {
     rating: rating,
     comment: comment
   }
-  return fetch('https://localhost:3443/comments', {
+  return fetch('/comments', {
     method: 'POST',
     credentials: 'same-origin',
     headers: {
@@ -48,7 +48,7 @@ export const postComment = (dishId, rating, comment) => (dispatch) => {
 export const fetchDishes = () => (dispatch) => {
   dispatch(dishesLoading(true));
 
-  return fetch('https://localhost:3443/dishes')
+  return fetch('/dishes')
     .then(response => {
         if (response.ok) {
           return response.json()
@@ -84,7 +84,7 @@ export const addDishes = (dishes) => ({
 })
 
 export const fetchComments = () => (dispatch) => {
-  return fetch('https://localhost:3443/comments')
+  return fetch('/comments')
   .then(response => {
       if (response.ok) {
         return response.json()
@@ -116,7 +116,7 @@ export const addComments = (comments) => ({
 export const fetchPromos = () => (dispatch) => {
   dispatch(promosLoading(true));
 
-  return fetch('https://localhost:3443/promotions')
+  return fetch('/promotions')
   .then(response => {
       if (response.ok) {
         return response.json()
@@ -151,7 +151,7 @@ export const addPromos = (promos) => ({
 export const fetchLeaders = () => (dispatch) => {
    dispatch(leadersLoading());
 
-   return fetch('https://localhost:3443/leaders')
+   return fetch('/leaders')
    .then(response => {
        if (response.ok) {
          return response.json()
@@ -184,7 +184,7 @@ export const addLeaders = (leaders) => ({
 })
 
 export const postFeedback = (info) => (dispatch) => {
-  return fetch('https://localhost:3443/feedback', {
+  return fetch('/feedback', {
     method: 'POST',
     credentials: 'same-origin',
     headers: {
@@ -224,7 +224,7 @@ export const addFeedback = (feedback) => ({
 export const fetchFavourites = () => (dispatch) => {
   dispatch(favouritesLoading(true));
 
-  return fetch('https://localhost:3443/favourites', {
+  return fetch('/favourites', {
     method: 'GET',
     credentials: 'same-origin',
     headers: {
@@ -264,7 +264,7 @@ export const addFavourites = (favourites) => ({
 
 export const postFavourite = (dishId) => (dispatch) => {
   const token = 'Bearer ' + sessionStorage['token'];
-  return fetch('https://localhost:3443/favourites/' + dishId, {
+  return fetch('/favourites/' + dishId, {
     method: 'POST',
     credentials: 'same-origin',
     headers: {
@@ -297,7 +297,7 @@ export const postFavourite = (dishId) => (dispatch) => {
 
 export const deleteFavourite = (dishId) => (dispatch) => {
   const token = 'Bearer ' + sessionStorage['token'];
-  return fetch('https://localhost:3443/favourites/' + dishId, {
+  return fetch('/favourites/' + dishId, {
     method: 'DELETE',
     credentials: 'same-origin',
     headers: {
@@ -329,7 +329,7 @@ export const deleteFavourite = (dishId) => (dispatch) => {
 
 export const loginReq = (cred) => (dispatch) => {
   dispatch(loginRequest());
-  return fetch('https://localhost:3443/users/login', {
+  return fetch('/users/login', {
     method: 'POST',
     credentials: 'same-origin',
     headers: {
@@ -375,7 +375,7 @@ export const loginSuccess = () => ({
 
 export const signupReq = (cred) => (dispatch) => {
   dispatch(signupRequest());
-  return fetch('https://localhost:3443/users/signup', {
+  return fetch('/users/signup', {
     method: 'POST',
     credentials: 'same-origin',
     headers: {
@@ -418,7 +418,7 @@ export const signupSuccess = () => ({
 })
 
 /*export const fetchUser = () => {
-  return fetch('https://localhost:3443/users/user', {
+  return fetch('/users/user', {
     method: 'GET',
     credentials: 'same-origin',
     headers: {

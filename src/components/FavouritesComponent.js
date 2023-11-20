@@ -12,7 +12,7 @@ function Favourites(props) {
           <Fade in>
             <Media tag="li">
               <Media left middle>
-                <Media object src={'https://localhost:3443/' + favourite.image} alt={favourite.name} />
+                <Media object src={favourite.image} alt={favourite.name} />
               </Media>
               <Media body className="ml-1">
                 <Media heading>{favourite.name}</Media>
